@@ -13,7 +13,7 @@ def do_pack():
     mth = datetime.utcnow().month
     day = datetime.utcnow().day
     hr = datetime.utcnow().hour
-    mins = datetime.utcnow().min
+    mins = datetime.utcnow().minute
     secs = datetime.utcnow().second
 
     directory = "versions"
