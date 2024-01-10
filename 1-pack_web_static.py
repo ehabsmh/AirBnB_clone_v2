@@ -21,7 +21,7 @@ def do_pack():
     archive = f"{directory}/web_static_{yr}{mth}{day}{hr}{mins}{secs}.tgz"
 
     if not os.path.isdir(directory):
-        if local(f"mkdir {directory}").failed:
+        if local(f"mkdir -p {directory}").failed:
             return None
 
     if local(f"tar -czvf {archive} web_static").failed:
