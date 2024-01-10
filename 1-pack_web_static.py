@@ -7,23 +7,17 @@ import os
 
 
 def do_pack():
-    """generates a .tgz archive from the contents of the web_static\
-     folder of your AirBnB Clone repo"""
-    yr = datetime.utcnow().year
-    mth = datetime.utcnow().month
-    day = datetime.utcnow().day
-    hr = datetime.utcnow().hour
-    mins = datetime.utcnow().min
-    secs = datetime.utcnow().second
-
-    directory = "versions"
-
-    archive = f"{directory}/web_static_{yr}{mth}{day}{hr}{mins}{secs}.tgz"
-
+    """Create a tar gzipped archive of the directory web_static."""
+    dt = datetime.utcnow()
+    file = "versions/web_static_{}{}{}{}{}{}.tgz".format(dt.year,
+                                                         dt.month,
+                                                         dt.day,
+                                                         dt.hour,
+                                                         dt.minute,
+                                                         dt.second)
     if os.path.isdir("versions") is False:
         if local("mkdir -p versions").failed is True:
             return None
-        
-    if local("tar -cvzf {} web_static".format(archive)).failed is True:
+    if local("tar -cvzf {} web_static".format(file)).failed is True:
         return None
-    return archive
+    return file
