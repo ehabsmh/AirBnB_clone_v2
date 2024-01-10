@@ -20,11 +20,10 @@ def do_pack():
 
     archive = f"{directory}/web_static_{yr}{mth}{day}{hr}{mins}{secs}.tgz"
 
-    if not os.path.isdir(directory):
-        if local(f"mkdir {directory}").failed:
+    if os.path.isdir("versions") is False:
+        if local("mkdir -p versions").failed is True:
             return None
-
-    if local(f"tar -czvf {archive} web_static/").failed:
+        
+    if local("tar -cvzf {} web_static".format(archive)).failed is True:
         return None
-
-    return os.path.abspath(archive)
+    return archive
