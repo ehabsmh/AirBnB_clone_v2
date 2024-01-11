@@ -1,0 +1,79 @@
+#!/usr/bin/python3
+"""Generates a .tgz archive"""
+
+from fabric.api import local, put, run, env
+from datetime import datetime
+import os
+
+env.hosts = ['54.242.168.59', '52.206.252.73']
+
+
+def do_pack():
+    """generates a .tgz archive from the contents of the web_static"""
+    yr = datetime.utcnow().year
+    mth = datetime.utcnow().month
+    day = datetime.utcnow().day
+    hr = datetime.utcnow().hour
+    mins = datetime.utcnow().minute
+    secs = datetime.utcnow().second
+
+    directory = "versions"
+
+    archive = f"{directory}/web_static_{yr}{mth}{day}{hr}{mins}{secs}.tgz"
+
+    if not os.path.isdir(directory):
+        if local(f"mkdir -p {directory}").failed:
+            return None
+
+    if local(f"tar -czvf {archive} web_static").failed:
+        return None
+
+    return archive
+
+# ______________________________________________________________________________
+
+
+def do_deploy(archive_path):
+    """Distributes an archive to your web servers"""
+
+    # Check if file at the path archive_path doesn’t exist
+    if not os.path.exists(archive_path):
+        return False
+
+    archive_file = archive_path.split("/")[-1]
+    archive_name = archive_file.split(".")[0]
+    releases_path = "/data/web_static/releases"
+
+    print(archive_file)
+
+    # Upload the archive to the /tmp/ directory of the web server
+    if put(local_path=archive_path, remote_path=f"/tmp/").failed:
+        return False
+
+    # Create the release directory for ex: web_static_20170315003959
+    run(f"mkdir -p {releases_path}/{archive_name}/")
+
+    # Uncompress the archive
+    if run(f"tar -xzf /tmp/{archive_file} -C {releases_path}/{archive_name}/"
+           ).failed:
+        return False
+
+    # Delete the archive file
+    if run(f"rm /tmp/{archive_file}").failed:
+        return False
+
+    # Move all the extracted content to our release directory
+    if run(f"mv {releases_path}/{archive_name}/web_static/*"
+            f"{releases_path}/{archive_name}/").failed:
+        return False
+
+    # Delete symbolic link
+    if run("rm -rf /data/web_static/current").failed:
+        return False
+
+    # Create a new the symbolic link
+    if run(f"ln -s {releases_path}/{archive_name} /data/web_static/current"
+           ).failed:
+        return False
+
+    return True
