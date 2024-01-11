@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """Generates a .tgz archive"""
 
-from fabric.api import local, put, run, env
-from datetime import datetime
+from fabric.api import put, run, env
 import os
 
 env.hosts = ['54.242.168.59', '52.206.252.73']
@@ -40,6 +39,10 @@ def do_deploy(archive_path):
     # Move all the extracted content to our release directory
     if run(f"mv {releases_path}/{archive_name}/web_static/*"
             f"{releases_path}/{archive_name}/").failed:
+        return False
+
+    if run(f"rm -rf {releases_path}/{archive_name}/web_static"
+           ).failed:
         return False
 
     # Delete symbolic link
