@@ -8,31 +8,6 @@ import os
 env.hosts = ['54.242.168.59', '52.206.252.73']
 
 
-def do_pack():
-    """generates a .tgz archive from the contents of the web_static"""
-    yr = datetime.utcnow().year
-    mth = datetime.utcnow().month
-    day = datetime.utcnow().day
-    hr = datetime.utcnow().hour
-    mins = datetime.utcnow().minute
-    secs = datetime.utcnow().second
-
-    directory = "versions"
-
-    archive = f"{directory}/web_static_{yr}{mth}{day}{hr}{mins}{secs}.tgz"
-
-    if not os.path.isdir(directory):
-        if local(f"mkdir -p {directory}").failed:
-            return None
-
-    if local(f"tar -czvf {archive} web_static").failed:
-        return None
-
-    return archive
-
-# ______________________________________________________________________________
-
-
 def do_deploy(archive_path):
     """Distributes an archive to your web servers"""
 
