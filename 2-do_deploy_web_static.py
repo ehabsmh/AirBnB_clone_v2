@@ -7,6 +7,7 @@ import os
 env.hosts = ['54.242.168.59', '52.206.252.73']
 env.user = 'ubuntu'
 
+
 def do_deploy(archive_path):
     """Distributes an archive to web servers
     Args:
@@ -29,12 +30,10 @@ def do_deploy(archive_path):
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
 
-        
         # Create the release directory for ex: web_static_20170315003959
         run(f"rm -rf {releases_path}/")
         run("mkdir -p {}/".format(releases_path))
 
-        
         # Uncompress the archive
         run("tar -xzf {} -C {}/".format(tmp_arch, releases_path))
 
