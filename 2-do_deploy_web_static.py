@@ -37,8 +37,8 @@ def do_deploy(archive_path):
         return False
 
     # Move all the extracted content to our release directory
-    if run(f"mv {releases_path}/{archive_name}/web_static/*"
-            f"{releases_path}/{archive_name}/").failed:
+    if run(f"mv {releases_path}/{archive_name}/web_static/* "
+           f"{releases_path}/{archive_name}/").failed:
         return False
 
     if run(f"rm -rf {releases_path}/{archive_name}/web_static"
