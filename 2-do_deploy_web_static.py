@@ -18,14 +18,13 @@ def do_deploy(archive_path):
     archive_name = archive_file.split(".")[0]
     releases_path = "/data/web_static/releases"
 
-    print(archive_file)
-
     # Upload the archive to the /tmp/ directory of the web server
-    if put(local_path=archive_path, remote_path=f"/tmp/").failed:
+    if put(archive_path, f"/tmp/{archive_file}").failed:
         return False
 
     # Create the release directory for ex: web_static_20170315003959
-    run(f"mkdir -p {releases_path}/{archive_name}/")
+    if run(f"mkdir -p {releases_path}/{archive_name}/").failed:
+        return False
 
     # Uncompress the archive
     if run(f"tar -xzf /tmp/{archive_file} -C {releases_path}/{archive_name}/"
