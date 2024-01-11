@@ -8,10 +8,16 @@ env.hosts = ['54.242.168.59', '52.206.252.73']
 
 
 def do_deploy(archive_path):
-    """Distributes an archive to your web servers"""
+    """Distributes an archive to web servers
+    Args: 
+        archive_path: The path to the archive file
+    
+    Returns:
+        True, Otherwise - False.
+    """
 
     # Check if file at the path archive_path doesn’t exist
-    if not os.path.exists(archive_path):
+    if not os.path.isfile(archive_path):
         return False
 
     archive_file = archive_path.split("/")[-1]
@@ -20,6 +26,9 @@ def do_deploy(archive_path):
 
     # Upload the archive to the /tmp/ directory of the web server
     if put(archive_path, f"/tmp/{archive_file}").failed:
+        return False
+    
+    if run(f"rm -rf {releases_path}/{archive_name}/").failed:
         return False
 
     # Create the release directory for ex: web_static_20170315003959
@@ -40,6 +49,7 @@ def do_deploy(archive_path):
            f"{releases_path}/{archive_name}/").failed:
         return False
 
+    # Remove the web_static directory
     if run(f"rm -rf {releases_path}/{archive_name}/web_static"
            ).failed:
         return False
