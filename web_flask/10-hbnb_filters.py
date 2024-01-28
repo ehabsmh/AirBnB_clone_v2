@@ -16,7 +16,7 @@ def remove_session(exception):
 
 
 @app.route("/hbnb_filters", strict_slashes=False)
-def get_cities_by_states():
+def hbnb_filters():
     """Display hbnb"""
     states = storage.all(State)
     amenities = storage.all(Amenity)
