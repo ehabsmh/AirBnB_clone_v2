@@ -16,10 +16,10 @@ def remove_session(exception):
 
 @app.route("/states_list", strict_slashes=False)
 def get_states():
-    """Displays all states in a HTML file"""    
+    """Displays all states in a HTML file"""
     states = storage.all(State)
     states = {value.id: value.name for value in states.values()}
-    return render_template("7-states_list.html", 
+    return render_template("7-states_list.html",
                            tablename="States",
                            states=states)
 
