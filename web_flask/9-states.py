@@ -28,16 +28,17 @@ def get_cities_by_states(id=None):
                 state_name = state.name
                 state_cities = state.cities
         return render_template("9-states.html",
-                               tablename="States",
                                state_cities=state_cities,
-                               states=states,
                                id=id,
                                state_name=state_name)
-    else:
+    if not id:
         states = {value.id: value.name for value in states.values()}
         return render_template("9-states.html",
                                tablename="States",
                                states=states)
+
+    return render_template("9-states.html",
+                           states=None)
 
 
 if __name__ == "__main__":

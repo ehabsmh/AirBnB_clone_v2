@@ -4,7 +4,7 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-        {% if id %}
+        {% if id and state_name %}
         <H1>State: {{ state_name }}</H1>
         <H3>Cities:</H3>
         <UL>
@@ -12,13 +12,15 @@
           <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
           {% endfor %}
         </UL>
-        {% else %}
+        {% elif not id %}
         <H1>{{ tablename }}</H1>
         <UL>
           {% for id, name in states | dictsort(false, 'value') %}
           <LI>{{ id }}: <B>{{ name }}</B></LI>
           {% endfor %}
         </UL>
+        {% else %}
+        <H1>Not found!</H1>
         {% endif %}
     </BODY>
 </HTML>
